@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
+// Handle potential default export in some environments
+const nodemailerClient = nodemailer.default || nodemailer;
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 
@@ -36,8 +38,8 @@ app.use(express.json());
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    success: true, 
+  res.json({
+    success: true,
     message: 'Server is running',
     timestamp: new Date().toISOString()
   });
@@ -87,7 +89,7 @@ app.get('/api/test-smtp', async (req, res) => {
 
     // Verify SMTP connection
     await transporter.verify();
-    
+
     res.json({
       success: true,
       message: 'SMTP connection successful'
@@ -106,7 +108,7 @@ app.get('/api/test-smtp', async (req, res) => {
 let transporter;
 try {
   if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-    transporter = nodemailer.createTransporter({
+    transporter = nodemailerClient.createTransporter({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: process.env.SMTP_PORT || 587,
       secure: false,
@@ -127,14 +129,56 @@ try {
 app.post('/api/register-partner', async (req, res) => {
   try {
     const formData = req.body;
-    
+
     if (!supabase) {
       return res.status(500).json({
         success: false,
         message: 'Database connection not available. Please check server configuration.'
       });
     }
-    
+
+    // Submit to External API
+    try {
+      console.log('Submitting to external API...');
+      const externalResponse = await fetch('https://portal.applynext.io/api/partner-requests/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          phone: formData.phone,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          channel: 'Website'
+        })
+      });
+
+      const externalData = await externalResponse.json();
+      console.log('External API Response:', externalResponse.status, externalData);
+
+      if (externalResponse.status === 400) {
+        return res.status(400).json({
+          success: false,
+          error: externalData.message || 'Duplicate email / duplicate phone'
+        });
+      }
+
+      if (!externalResponse.ok) {
+        throw new Error(`External API failed with status ${externalResponse.status}`);
+      }
+
+    } catch (apiError) {
+      console.error('External API Submission Failed:', apiError);
+      // If unauthorized or server error on their side, do we fail hard? 
+      // User prompt implies specific handling for success/error. 
+      // If it fails with something other than 400, we'll log it and return 500 for now to be safe.
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to submit application to partner portal. Please try again.'
+      });
+    }
+
     // Store registration in Supabase
     const { data: registration, error: dbError } = await supabase
       .from('registrations')
@@ -159,20 +203,17 @@ app.post('/api/register-partner', async (req, res) => {
       .single();
 
     if (dbError) {
-      console.error('Database error details:', {
+      console.error('Database warning (non-fatal):', {
         message: dbError.message,
         details: dbError.details,
         hint: dbError.hint,
         code: dbError.code
       });
-      return res.status(500).json({ 
-        success: false, 
-        message: 'Failed to save registration. Please try again.',
-        error: dbError.message
-      });
+      // Do not fail the request - external API succeeded
+      // return res.status(500)... 
+    } else {
+      console.log('Registration saved to database:', registration.id);
     }
-
-    console.log('Registration saved to database:', registration.id);
 
     // Send welcome email
     const emailHtml = `
@@ -280,10 +321,10 @@ app.post('/api/register-partner', async (req, res) => {
       } catch (emailError) {
         console.error('Email sending failed:', emailError);
         // Don't fail the registration if email fails
-        return res.status(200).json({ 
-          success: true, 
+        return res.status(200).json({
+          success: true,
           message: 'Registration successful but email sending failed. Please contact support.',
-          registrationId: registration.id,
+          registrationId: (typeof registration !== 'undefined' && registration) ? registration.id : 'external-only',
           emailError: true
         });
       }
@@ -291,10 +332,10 @@ app.post('/api/register-partner', async (req, res) => {
       console.warn('Email transporter not configured, skipping email');
     }
 
-    res.status(200).json({ 
-      success: true, 
+    res.status(200).json({
+      success: true,
       message: 'Registration successful and welcome email sent!',
-      registrationId: registration.id
+      registrationId: (typeof registration !== 'undefined' && registration) ? registration.id : 'external-only'
     });
 
   } catch (error) {
@@ -303,8 +344,8 @@ app.post('/api/register-partner', async (req, res) => {
       stack: error.stack,
       name: error.name
     });
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       message: 'Registration failed. Please try again.',
       error: error.message
     });
@@ -321,9 +362,9 @@ app.get('/api/registrations', async (req, res) => {
 
     if (error) {
       console.error('Database error:', error);
-      return res.status(500).json({ 
-        success: false, 
-        message: 'Failed to fetch registrations' 
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to fetch registrations'
       });
     }
 
@@ -335,9 +376,9 @@ app.get('/api/registrations', async (req, res) => {
 
   } catch (error) {
     console.error('Server error:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: 'Server error occurred' 
+    res.status(500).json({
+      success: false,
+      message: 'Server error occurred'
     });
   }
 });

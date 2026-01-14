@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  User, 
-  Building, 
-  Globe, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Briefcase, 
+import {
+  User,
+  Building,
+  Globe,
+  Mail,
+  Phone,
+  MapPin,
+  Briefcase,
   Calendar,
   CheckCircle,
   ArrowRight,
@@ -134,7 +134,7 @@ const PartnerRegistration = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsSubmitting(true);
@@ -171,10 +171,10 @@ const PartnerRegistration = () => {
       const data = await response.json();
       console.log('Registration successful:', data);
       setCurrentStep('thank-you');
-      
+
     } catch (error) {
       console.error('Registration error:', error);
-      
+
       // Show detailed error message
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       alert(`Registration failed: ${errorMessage}\n\nPlease ensure the backend server is running and try again.`);
@@ -230,14 +230,7 @@ const PartnerRegistration = () => {
             transition={{ duration: 0.6, delay: 0.5 }}
           >
             <h3 className="font-semibold text-navy-900 mb-4">What happens next:</h3>
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <h4 className="font-semibold text-blue-900 mb-2">🔧 Debug Information</h4>
-              <div className="text-sm text-blue-700 space-y-1">
-                <p>Supabase URL: {import.meta.env.VITE_SUPABASE_URL ? '✅ Configured' : '❌ Missing'}</p>
-                <p>Supabase Key: {import.meta.env.VITE_SUPABASE_ANON_KEY ? '✅ Configured' : '❌ Missing'}</p>
-                <p>Registration will submit directly to Supabase database</p>
-              </div>
-            </div>
+
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
                 <div className="w-6 h-6 bg-teal-500 text-white rounded-full flex items-center justify-center text-sm font-bold mt-0.5">1</div>
@@ -269,6 +262,7 @@ const PartnerRegistration = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
+            {/* 
             <div className="flex flex-col sm:flex-row gap-4">
               <button className="flex-1 bg-navy-100 hover:bg-navy-200 text-navy-700 px-6 py-3 rounded-lg font-medium transition-colors duration-200 flex items-center justify-center space-x-2">
                 <Download className="h-5 w-5" />
@@ -279,7 +273,8 @@ const PartnerRegistration = () => {
                 <span>Explore Institutions</span>
               </button>
             </div>
-            
+            */}
+
             <div className="text-center">
               <p className="text-navy-600 mb-2">Questions? Contact us at:</p>
               <a href="mailto:partners@applynext.com" className="text-teal-600 font-medium hover:text-teal-700">
@@ -349,7 +344,7 @@ const PartnerRegistration = () => {
                 <User className="h-6 w-6 text-teal-500" />
                 <h2 className="text-2xl font-bold text-navy-900">Personal Details</h2>
               </div>
-              
+
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-navy-700 mb-2">
@@ -359,14 +354,13 @@ const PartnerRegistration = () => {
                     type="text"
                     value={formData.firstName}
                     onChange={(e) => handleInputChange('firstName', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                      errors.firstName ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.firstName ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     placeholder="Enter your first name"
                   />
                   {errors.firstName && <p className="text-red-500 text-sm mt-1">{errors.firstName}</p>}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-navy-700 mb-2">
                     Last Name *
@@ -375,14 +369,13 @@ const PartnerRegistration = () => {
                     type="text"
                     value={formData.lastName}
                     onChange={(e) => handleInputChange('lastName', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                      errors.lastName ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.lastName ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     placeholder="Enter your last name"
                   />
                   {errors.lastName && <p className="text-red-500 text-sm mt-1">{errors.lastName}</p>}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-navy-700 mb-2">
                     Email *
@@ -391,14 +384,13 @@ const PartnerRegistration = () => {
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                      errors.email ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.email ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     placeholder="Enter your email address"
                   />
                   {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-navy-700 mb-2">
                     Phone Number *
@@ -407,14 +399,13 @@ const PartnerRegistration = () => {
                     type="tel"
                     value={formData.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                      errors.phone ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.phone ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     placeholder="Enter your phone number"
                   />
                   {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-navy-700 mb-2">
                     Country *
@@ -423,14 +414,13 @@ const PartnerRegistration = () => {
                     type="text"
                     value={formData.country}
                     onChange={(e) => handleInputChange('country', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                      errors.country ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.country ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     placeholder="Enter your country"
                   />
                   {errors.country && <p className="text-red-500 text-sm mt-1">{errors.country}</p>}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-navy-700 mb-2">
                     City *
@@ -439,9 +429,8 @@ const PartnerRegistration = () => {
                     type="text"
                     value={formData.city}
                     onChange={(e) => handleInputChange('city', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                      errors.city ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.city ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     placeholder="Enter your city"
                   />
                   {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
@@ -455,7 +444,7 @@ const PartnerRegistration = () => {
                 <Building className="h-6 w-6 text-teal-500" />
                 <h2 className="text-2xl font-bold text-navy-900">Company Details</h2>
               </div>
-              
+
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-navy-700 mb-2">
@@ -465,14 +454,13 @@ const PartnerRegistration = () => {
                     type="text"
                     value={formData.companyName}
                     onChange={(e) => handleInputChange('companyName', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                      errors.companyName ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.companyName ? 'border-red-500' : 'border-gray-300'
+                      }`}
                     placeholder="Enter your company name"
                   />
                   {errors.companyName && <p className="text-red-500 text-sm mt-1">{errors.companyName}</p>}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-navy-700 mb-2">
                     Type of Business *
@@ -480,9 +468,8 @@ const PartnerRegistration = () => {
                   <select
                     value={formData.businessType}
                     onChange={(e) => handleInputChange('businessType', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                      errors.businessType ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.businessType ? 'border-red-500' : 'border-gray-300'
+                      }`}
                   >
                     <option value="">Select business type</option>
                     {businessTypes.map(type => (
@@ -491,7 +478,7 @@ const PartnerRegistration = () => {
                   </select>
                   {errors.businessType && <p className="text-red-500 text-sm mt-1">{errors.businessType}</p>}
                 </div>
-                
+
                 <div>
                   <label className="block text-sm font-medium text-navy-700 mb-2">
                     Your Role *
@@ -499,9 +486,8 @@ const PartnerRegistration = () => {
                   <select
                     value={formData.role}
                     onChange={(e) => handleInputChange('role', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                      errors.role ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.role ? 'border-red-500' : 'border-gray-300'
+                      }`}
                   >
                     <option value="">Select your role</option>
                     {roles.map(role => (
@@ -510,7 +496,7 @@ const PartnerRegistration = () => {
                   </select>
                   {errors.role && <p className="text-red-500 text-sm mt-1">{errors.role}</p>}
                 </div>
-                
+
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-navy-700 mb-2">
                     Years of Experience *
@@ -518,9 +504,8 @@ const PartnerRegistration = () => {
                   <select
                     value={formData.experience}
                     onChange={(e) => handleInputChange('experience', e.target.value)}
-                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                      errors.experience ? 'border-red-500' : 'border-gray-300'
-                    }`}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.experience ? 'border-red-500' : 'border-gray-300'
+                      }`}
                   >
                     <option value="">Select experience level</option>
                     {experienceOptions.map(exp => (
@@ -538,7 +523,7 @@ const PartnerRegistration = () => {
                 <Globe className="h-6 w-6 text-teal-500" />
                 <h2 className="text-2xl font-bold text-navy-900">Countries of Interest</h2>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium text-navy-700 mb-4">
                   Which countries are you interested in recruiting for? *
@@ -568,9 +553,8 @@ const PartnerRegistration = () => {
               <select
                 value={formData.source}
                 onChange={(e) => handleInputChange('source', e.target.value)}
-                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${
-                  errors.source ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-colors ${errors.source ? 'border-red-500' : 'border-gray-300'
+                  }`}
               >
                 <option value="">Select source</option>
                 {sourceOptions.map(source => (
