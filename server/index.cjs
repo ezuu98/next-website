@@ -1,13 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
-// Handle potential default export in some environments
-const nodemailerClient = nodemailer.default || nodemailer;
+const nodemailerClient = nodemailer;
 const { createClient } = require('@supabase/supabase-js');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 2001;
 
 console.log('🚀 Starting ApplyNext server...');
 console.log('Environment check:');
@@ -108,7 +107,7 @@ app.get('/api/test-smtp', async (req, res) => {
 let transporter;
 try {
   if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-    transporter = nodemailerClient.createTransporter({
+    transporter = nodemailerClient.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: process.env.SMTP_PORT || 587,
       secure: false,
