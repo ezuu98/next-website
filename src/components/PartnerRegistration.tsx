@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../config';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   User,
@@ -141,26 +142,12 @@ const PartnerRegistration = () => {
 
     try {
       // Submit to backend API endpoint
-      const response = await fetch('/api/register-partner', {
+      const response = await fetch(`${API_BASE_URL}/api/partner-requests/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          country: formData.country,
-          city: formData.city,
-          phone: formData.phone,
-          companyName: formData.companyName,
-          businessType: formData.businessType,
-          role: formData.role,
-          experience: formData.experience,
-          countries: formData.countries,
-          source: formData.source,
-          consent: formData.consent,
-        }),
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {

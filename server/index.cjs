@@ -125,7 +125,7 @@ try {
 }
 
 // Partner registration endpoint
-app.post('/api/register-partner', async (req, res) => {
+app.post('/api/partner-requests/submit', async (req, res) => {
   try {
     const formData = req.body;
 
